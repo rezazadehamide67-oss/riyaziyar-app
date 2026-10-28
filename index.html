@@ -1,1 +1,93 @@
+HTML
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>آموزش و آزمون ریاضی هفتم</title>
+<style>
+body{font-family:Tahoma,Arial;background:#f0f4ff;margin:0;color:#24304a}
+header{background:#3558bd;color:white;padding:22px;text-align:center}
+main{max-width:700px;margin:auto;padding:16px}
+.card{background:white;padding:18px;margin:14px 0;border-radius:16px;box-shadow:0 3px 12px #ccd4e8}
+button,select{padding:12px;border:0;border-radius:10px;margin:5px;font-size:16px}
+button{background:#3558bd;color:white;cursor:pointer}
+.option{display:block;width:100%;text-align:right;background:#e9efff;color:#24304a}
+#result{font-weight:bold;padding:10px}
+</style>
+</head>
+<body>
+<header>
+<h1>📘 ریاضی‌یار</h1>
+<p>آموزش، تمرین و آزمون ریاضی</p>
+</header>
+<main>
+<div class="card">
+<h2>انتخاب پایه</h2>
+<select id="grade" onchange="changeGrade()">
+<option value="7">پایه هفتم</option>
+<option value="6">پایه ششم</option>
+</select>
+<select id="lesson" onchange="showLesson()"></select>
+</div>
+<div class="card">
+<h2 id="title">درس ریاضی</h2>
+<p id="explain"></p>
+<p id="example"></p>
+</div>
+<div class="card">
+<h2>📝 آزمون کوتاه</h2>
+<p id="question"></p>
+<div id="options"></div>
+<p id="result"></p>
+<p>امتیاز: <span id="score">۰</span></p>
+<button onclick="nextQuestion()">سؤال بعدی</button>
+<button onclick="resetQuiz()">شروع دوباره</button>
+</div>
+</main>
+<script>
+const data={
+7:[
+{t:"عددهای صحیح",e:"عددهای مثبت، منفی و صفر را عدد صحیح می‌گوییم.",x:"مثال: ۳- از ۲- کوچک‌تر است.",q:"حاصل ۳- + ۷ چند است؟",o:["۴","۱۰-","۴-","۲"],a:0},
+{t:"عبارت‌های جبری",e:"در عبارت جبری از عدد و حرف استفاده می‌کنیم.",x:"مثال: اگر a=3 باشد، a+2=5 است.",q:"اگر a=4 باشد، a+3 چند است؟",o:["۶","۷","۸","۱۲"],a:1},
+{t:"هندسه و زاویه",e:"مجموع زاویه‌های روی یک خط راست ۱۸۰ درجه است.",x:"مثال: متمم ۳۰ درجه برابر ۶۰ درجه است.",q:"متمم زاویه ۴۰ درجه چند است؟",o:["۱۴۰","۵۰","۶۰","۴۰"],a:2},
+{t:"تناسب",e:"در تناسب، نسبت دو مقدار با نسبت دو مقدار دیگر برابر است.",x:"مثال: ۲ به ۴ برابر ۱ به ۲ است.",q:"نصف ۱۸ چند است؟",o:["۶","۸","۹","۱۲"],a:2}
+],
+6:[
+{t:"عددهای صحیح",e:"عدد صحیح می‌تواند مثبت، منفی یا صفر باشد.",x:"مثال: ۵+ یعنی پنج واحد بالاتر از صفر.",q:"حاصل ۶+ و ۲- چند است؟",o:["۸","۴","۴-","۱۲"],a:1},
+{t:"کسرها",e:"برای جمع کسرهای هم‌مخرج، صورت‌ها را جمع می‌کنیم.",x:"مثال: ۲/۵ + ۱/۵ = ۳/۵",q:"۲/۷ + ۳/۷ چند است؟",o:["۵/۷","۵/۱۴","۱/۷","۶/۷"],a:0},
+{t:"مساحت",e:"مساحت مستطیل برابر طول ضربدر عرض است.",x:"مثال: طول ۵ و عرض ۳، مساحت ۱۵ است.",q:"مساحت مستطیل با طول ۶ و عرض ۲؟",o:["۸","۱۲","۱۶","۱۰"],a:1}
+]};
+let current=0,score=0,answered=false;
+function fa(n){return String(n).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d])}
+function changeGrade(){
+let s=document.getElementById("lesson");s.innerHTML="";
+data[grade.value].forEach((v,i)=>{let op=document.createElement("option");op.value=i;op.textContent=v.t;s.appendChild(op)});
+showLesson();
+}
+function showLesson(){
+current=Number(document.getElementById("lesson").value)||0;
+let d=data[grade.value][current];
+title.textContent=d.t;explain.textContent=d.e;example.textContent=d.x;
+question.textContent=d.q;options.innerHTML="";result.textContent="";answered=false;
+d.o.forEach((v,i)=>{let b=document.createElement("button");b.className="option";b.textContent=v;b.onclick=()=>answer(i);options.appendChild(b)});
+}
+function answer(i){
+if(answered)return;answered=true;
+let d=data[grade.value][current];
+if(i===d.a){score+=5;result.textContent="آفرین! پاسخ درست است ⭐"}
+else result.textContent="پاسخ درست: "+d.o[d.a]+" — دوباره تمرین کن.";
+document.getElementById("score").textContent=fa(score);
+}
+function nextQuestion(){
+let s=document.getElementById("lesson");
+s.selectedIndex=(s.selectedIndex+1)%s.options.length;
+showLesson();
+}
+function resetQuiz(){score=0;document.getElementById("score").textContent="۰";showLesson()}
+changeGrade();
+</script>
+</body>
+</html>
 
