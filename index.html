@@ -1,4 +1,263 @@
-HTML
+HTMLHTML
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#5146e5">
+<title>ریاضی‌یار | کلاس هوشمند ریاضی</title>
+<style>
+:root{--bg:#f5f6fc;--card:#fff;--ink:#202542;--muted:#777f99;--primary:#5146e5;--soft:#eeedff;--border:#e8e9f3}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif;line-height:1.9}
+body.dark{--bg:#15182a;--card:#22263d;--ink:#f4f5ff;--muted:#b0b5d0;--soft:#303052;--border:#373b55}
+button,select{font:inherit;cursor:pointer}
+button{border:0;border-radius:12px;padding:11px 16px;background:var(--primary);color:white}
+button:disabled{opacity:.5}
+select{background:var(--card);color:var(--ink);border:1px solid var(--border);border-radius:10px;padding:10px;max-width:100%}
+header{background:linear-gradient(125deg,#5146e5,#8a5cf6);color:white;padding:24px 18px 32px;border-radius:0 0 28px 28px}
+.top{max-width:950px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{font-size:23px;font-weight:bold}
+.tag{font-size:12px;opacity:.85}
+.hero{max-width:950px;margin:25px auto 0}
+.hero h1{font-size:26px;margin:0 0 5px}
+.hero p{margin:0;opacity:.9}
+main{max-width:950px;margin:20px auto;padding:0 14px 40px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.toolbar button{background:var(--card);color:var(--ink);border:1px solid var(--border)}
+.toolbar button.active{background:var(--primary);color:white}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:17px;margin-bottom:14px;min-width:0}
+.stat{padding:15px}
+.stat .num{font-size:25px;font-weight:bold;color:var(--primary)}
+.muted{color:var(--muted);font-size:13px}
+h2{font-size:19px;margin:0 0 12px}
+h3{font-size:16px;margin:0 0 8px}
+.progress{height:9px;background:var(--soft);border-radius:20px;overflow:hidden;margin:10px 0}
+.progress span{display:block;height:100%;background:linear-gradient(90deg,#5146e5,#9a68fa);width:0;transition:width .3s}
+.lesson-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.lesson{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;text-align:right;color:var(--ink)}
+.lesson:hover{border-color:var(--primary)}
+.lesson small{display:block;color:var(--muted);margin-top:4px}
+.pill{display:inline-block;background:var(--soft);color:var(--primary);border-radius:20px;padding:3px 10px;font-size:12px}
+.example{background:var(--soft);padding:14px;border-radius:12px;margin:12px 0}
+.option{display:block;width:100%;text-align:right;margin:8px 0;background:var(--bg);color:var(--ink);border:1px solid var(--border)}
+.option.correct{background:#dcfce7;color:#166534;border-color:#86efac}
+.option.wrong{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+.notice{padding:12px;border-radius:12px;background:var(--soft);margin-top:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.hidden{display:none!important}
+.big{font-size:30px;font-weight:bold;color:var(--primary)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+input{font:inherit;background:var(--card);color:var(--ink);border:1px solid var(--border);border-radius:10px;padding:10px;max-width:100%}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.lesson-list{grid-template-columns:1fr}.hero h1{font-size:22px}.card{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top">
+  <div><div class="brand">📘 ریاضی‌یار</div><div class="tag">همراه هوشمند یادگیری ریاضی</div></div>
+  <button onclick="toggleDark()" style="background:#ffffff25">☾ حالت شب</button>
+ </div>
+ <div class="hero">
+  <h1>یادگیری با تمرین، پیشرفت با اعتمادبه‌نفس! ✨</h1>
+  <p>درس بخوان، تمرین کن و پیشرفتت را ببین.</p>
+ </div>
+</header>
+<main>
+ <div class="card">
+  <div class="row">
+   <div><h2>سلام، دانش‌آموز پرتلاش! 👋</h2><div class="muted">پایهٔ تحصیلی خودت را انتخاب کن.</div></div>
+   <select id="grade" onchange="changeGrade()">
+    <option value="7">پایه هفتم</option>
+    <option value="6">پایه ششم</option>
+   </select>
+  </div>
+ </div>
+ <nav class="toolbar">
+  <button class="active" data-page="home" onclick="go('home',this)">🏠 خانه</button>
+  <button data-page="lessons" onclick="go('lessons',this)">📚 درس‌ها</button>
+  <button data-page="quiz" onclick="startQuiz();go('quiz',document.querySelector('[data-page=quiz]'))">📝 آزمون</button>
+  <button data-page="report" onclick="go('report',this)">📊 کارنامه</button>
+ </nav>
+
+ <section id="home">
+  <div class="grid">
+   <div class="card stat"><div class="muted">امتیاز کل</div><div class="num" id="totalScore">۰</div><div class="muted">امتیاز کسب‌شده</div></div>
+   <div class="card stat"><div class="muted">آزمون‌ها</div><div class="num" id="totalTests">۰</div><div class="muted">تعداد پاسخ‌ها</div></div>
+   <div class="card stat"><div class="muted">درصد موفقیت</div><div class="num" id="accuracy">۰٪</div><div class="muted">پاسخ صحیح</div></div>
+   <div class="card stat"><div class="muted">درس‌ها</div><div class="num" id="doneLessons">۰</div><div class="muted">درس‌های تمرین‌شده</div></div>
+  </div>
+  <div class="card">
+   <div class="row"><h2>🎯 مسیر پیشرفت</h2><span class="pill" id="level">شروع یادگیری</span></div>
+   <div class="progress"><span id="overallBar"></span></div>
+   <div class="muted" id="progressText">اولین درس را انتخاب کن و یادگیری را شروع کن.</div>
+  </div>
+  <div class="card">
+   <h2>🚀 ادامهٔ یادگیری</h2>
+   <p>یک درس را انتخاب کن، مثال را بخوان و سپس دانسته‌هایت را امتحان کن.</p>
+   <button onclick="go('lessons',document.querySelector('[data-page=lessons]'))">مشاهدهٔ درس‌ها ←</button>
+  </div>
+  <div class="card"><h2>⭐ نکتهٔ روز</h2><p>اشتباه‌کردن بخشی از یادگیری است. جواب را بررسی کن، روش حل را بفهم و دوباره تلاش کن.</p></div>
+ </section>
+
+ <section id="lessons" class="hidden">
+  <div class="card">
+   <h2>📚 کتابخانهٔ درس‌ها</h2>
+   <p class="muted">برای شروع، یکی از موضوع‌ها را انتخاب کن. فهرست زیر نمونهٔ آموزشی است و همهٔ فصل‌های کتاب را پوشش نمی‌دهد.</p>
+   <input id="search" placeholder="جست‌وجوی درس..." oninput="renderLessons()" style="width:100%">
+  </div>
+  <div class="lesson-list" id="lessonList"></div>
+ </section>
+
+ <section id="study" class="hidden">
+  <div class="card">
+   <div class="row"><span class="pill" id="lessonTag">درس</span><button onclick="go('lessons',document.querySelector('[data-page=lessons]'))">بازگشت به درس‌ها</button></div>
+   <h2 id="studyTitle" style="margin-top:12px"></h2>
+   <h3>📖 درس‌نامهٔ ساده</h3><p id="studyText"></p>
+   <div class="example"><b>💡 مثال حل‌شده</b><p id="studyExample"></p><b>روش حل:</b><p id="studySteps"></p></div>
+   <div class="notice"><b>یادت باشد:</b><p id="studyTip"></p></div>
+   <button onclick="practiceLesson()">شروع تمرین این درس ←</button>
+  </div>
+ </section>
+
+ <section id="quiz" class="hidden">
+  <div class="card">
+   <div class="row"><span class="pill" id="quizLabel">آزمون تمرینی</span><span class="muted" id="qCounter"></span></div>
+   <div class="progress"><span id="quizBar"></span></div>
+   <h2 id="qTitle">آماده‌ای؟</h2>
+   <div id="qOptions"></div>
+   <div id="feedback" class="notice hidden"></div>
+   <div class="row" style="margin-top:14px"><span class="muted">پاسخ درست: <b id="roundCorrect">۰</b></span><button id="nextBtn" onclick="nextQuestion()" disabled>سؤال بعدی ←</button></div>
+  </div>
+ </section>
+
+ <section id="report" class="hidden">
+  <div class="card">
+   <h2>📊 کارنامهٔ یادگیری</h2>
+   <p>عملکردت را بررسی کن و برای بهترشدن برنامه بریز.</p>
+   <div class="grid">
+    <div><div class="muted">امتیاز</div><div class="big" id="rScore">۰</div></div>
+    <div><div class="muted">پاسخ صحیح</div><div class="big" id="rRight">۰</div></div>
+   </div>
+   <div class="progress"><span id="reportBar"></span></div>
+   <p id="reportText"></p>
+   <h3>درس‌های تمرین‌شده</h3><div id="history" class="muted">هنوز درسی تمرین نشده است.</div>
+   <button onclick="resetProgress()" style="background:#d9485f;margin-top:16px">پاک‌کردن کارنامه</button>
+  </div>
+ </section>
+ <footer>ریاضی‌یار • نسخهٔ آموزشی اولیه • پیشرفت روی همین مرورگر ذخیره می‌شود.</footer>
+</main>
+<script>
+const courses={
+7:[
+{t:"عددهای صحیح",s:"عددهای صحیح شامل عددهای مثبت، عددهای منفی و صفر هستند. روی محور اعداد، عددی که سمت راست‌تر است بزرگ‌تر است.",e:"حاصل ۳- + ۸ را پیدا کن.",steps:"از ۳- شروع می‌کنیم و ۸ واحد به سمت راست می‌رویم؛ به ۵ می‌رسیم.",tip:"جمع دو عدد منفی، عددی منفی می‌دهد.",q:[{q:"حاصل ۳- + ۸ کدام است؟",o:["۵","۱۱-","۵-","۱۱"],a:0,x:"با حرکت ۸ واحد به راست از ۳-، به ۵ می‌رسیم."},{q:"کدام عدد بزرگ‌تر است؟",o:["۴-","۲-","۳-","۵-"],a:1,x:"روی محور اعداد، ۲- از بقیه راست‌تر است."},{q:"حاصل ۶- + ۲- چیست؟",o:["۸","۴-","۸-","۱۲"],a:2,x:"قدر مطلق‌ها را جمع می‌کنیم و علامت منفی می‌ماند."}]},
+{t:"عبارت‌های جبری",s:"در عبارت جبری از عدد، عمل ریاضی و حرف برای نشان‌دادن مقدار استفاده می‌کنیم.",e:"اگر a=4 باشد، مقدار a+3 چقدر است؟",steps:"به جای a عدد ۴ می‌گذاریم: ۴+۳=۷.",tip:"حرف را با مقدار داده‌شده جایگزین کن.",q:[{q:"اگر a=4 باشد، a+3 چند است؟",o:["۶","۷","۸","۱۲"],a:1,x:"۴+۳=۷."},{q:"اگر b=5 باشد، 2b چند است؟",o:["۷","۱۰","۲۵","۳"],a:1,x:"2×5=10."},{q:"کدام عبارت یعنی ۳ واحد بیشتر از n؟",o:["n-3","3n","n+3","n÷3"],a:2,x:"بیشتر یعنی جمع؛ پس n+3."}]},
+{t:"زاویه‌ها",s:"زاویه از دو نیم‌خط با مبدأ مشترک ساخته می‌شود. زاویهٔ راست ۹۰ درجه و زاویهٔ نیم‌صفحه ۱۸۰ درجه است.",e:"متمم زاویهٔ ۳۰ درجه را پیدا کن.",steps:"مجموع دو زاویهٔ متمم ۹۰ درجه است؛ ۹۰−۳۰=۶۰.",tip:"متمم: مجموع ۹۰ درجه؛ مکمل: مجموع ۱۸۰ درجه.",q:[{q:"متمم ۳۰ درجه چند است؟",o:["۱۵۰","۶۰","۹۰","۳۰"],a:1,x:"۹۰−۳۰=۶۰ درجه."},{q:"مجموع دو زاویهٔ مکمل چقدر است؟",o:["۹۰","۱۸۰","۲۷۰","۳۶۰"],a:1,x:"مجموع زاویه‌های مکمل ۱۸۰ درجه است."}]},
+{t:"تناسب و نسبت",s:"نسبت برای مقایسهٔ دو مقدار به کار می‌رود. در تناسب، دو نسبت با هم برابرند.",e:"نسبت ۲ به ۴ را ساده کن.",steps:"هر دو عدد را بر ۲ تقسیم می‌کنیم: ۱ به ۲.",tip:"برای ساده‌کردن نسبت، دو طرف را بر مقسوم‌علیه مشترک تقسیم کن.",q:[{q:"نسبت ۲ به ۴ به ساده‌ترین شکل چیست؟",o:["۱ به ۲","۲ به ۱","۱ به ۴","۴ به ۲"],a:0,x:"۲ و ۴ را بر ۲ تقسیم می‌کنیم."},{q:"نصف ۱۸ چند است؟",o:["۶","۸","۹","۱۲"],a:2,x:"۱۸÷۲=۹."}]}
+],
+6:[
+{t:"کسرها",s:"کسر بخشی از یک کل را نشان می‌دهد. برای جمع کسرهای هم‌مخرج، صورت‌ها را جمع می‌کنیم و مخرج ثابت می‌ماند.",e:"۲/۷ + ۳/۷ را حساب کن.",steps:"۲+۳=۵؛ پس جواب ۵/۷ است.",tip:"در جمع کسرهای هم‌مخرج، مخرج‌ها را جمع نکن.",q:[{q:"۲/۷ + ۳/۷ چند است؟",o:["۵/۷","۵/۱۴","۱/۷","۶/۷"],a:0,x:"صورت‌ها را جمع می‌کنیم و مخرج ۷ می‌ماند."},{q:"نصف ۱۲ چند است؟",o:["۴","۶","۸","۱۰"],a:1,x:"۱۲÷۲=۶."}]},
+{t:"مساحت و محیط",s:"محیط، اندازهٔ دور شکل است. مساحت، اندازهٔ سطح داخل شکل است.",e:"مساحت مستطیلی با طول ۶ و عرض ۲ را پیدا کن.",steps:"مساحت مستطیل برابر طول ضربدر عرض است: ۶×۲=۱۲.",tip:"واحد مساحت، واحد مربع است.",q:[{q:"مساحت مستطیل ۶ در ۲ چند است؟",o:["۸","۱۲","۱۶","۱۰"],a:1,x:"۶×۲=۱۲ واحد مربع."},{q:"محیط مربع با ضلع ۴ چند است؟",o:["۸","۱۲","۱۶","۲۰"],a:2,x:"محیط مربع برابر ۴×ضلع است: ۱۶."}]},
+{t:"اعداد و الگوها",s:"الگو از قاعده‌ای پیروی می‌کند. با پیدا کردن تغییر بین جمله‌ها می‌توان جملهٔ بعدی را یافت.",e:"در الگوی ۳، ۶، ۹، ۱۲ عدد بعدی چیست؟",steps:"هر بار ۳ واحد اضافه می‌شود؛ پس عدد بعدی ۱۵ است.",tip:"اختلاف جمله‌های پشت سر هم را بررسی کن.",q:[{q:"عدد بعدی ۳، ۶، ۹، ۱۲ چیست؟",o:["۱۳","۱۴","۱۵","۱۸"],a:2,x:"هر بار ۳ واحد اضافه شده است."}]}
+]};
+let state={score:0,answered:0,right:0,done:{},dark:false};
+try{state={...state,...JSON.parse(localStorage.getItem("riyaziyarPro")||"{}")}}catch(e){}
+let currentLesson=0,questions=[],qi=0,roundRight=0,locked=false;
+const $=id=>document.getElementById(id);
+function save(){try{localStorage.setItem("riyaziyarPro",JSON.stringify(state))}catch(e){}}
+function fa(n){return String(n).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[d])}
+function grade(){return $("grade").value}
+function allLessons(){return courses[grade()]}
+function go(page,btn){
+["home","lessons","study","quiz","report"].forEach(p=>$(p).classList.toggle("hidden",p!==page));
+document.querySelectorAll(".toolbar button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+if(page==="home"||page==="report")updateStats();
+if(page==="lessons")renderLessons();
+}
+function changeGrade(){renderLessons();updateStats()}
+function renderLessons(){
+let list=$("lessonList"),term=($("search").value||"").trim().toLowerCase();list.innerHTML="";
+allLessons().forEach((l,i)=>{
+if(!l.t.toLowerCase().includes(term))return;
+let b=document.createElement("button");b.className="lesson";
+b.innerHTML=`<span class="pill">درس ${fa(i+1)}</span><h3 style="margin-top:8px">${l.t}</h3><small>${state.done[grade()+"-"+l.t]?"✓ تمرین شده":"درس‌نامه و تمرین"}</small>`;
+b.onclick=()=>openLesson(i);list.appendChild(b);
+});
+}
+function openLesson(i){
+currentLesson=i;let l=allLessons()[i];
+$("lessonTag").textContent="پایه "+fa(grade());
+$("studyTitle").textContent=l.t;$("studyText").textContent=l.s;
+$("studyExample").textContent=l.e;$("studySteps").textContent=l.steps;$("studyTip").textContent=l.tip;
+go("study");
+}
+function practiceLesson(){
+questions=allLessons()[currentLesson].q.map(q=>({...q,lesson:allLessons()[currentLesson].t}));
+beginQuiz("تمرین: "+allLessons()[currentLesson].t);
+}
+function startQuiz(){
+questions=allLessons().flatMap(l=>l.q.map(q=>({...q,lesson:l.t})));
+questions.sort(()=>Math.random()-.5);questions=questions.slice(0,Math.min(5,questions.length));
+beginQuiz("آزمون پایه "+fa(grade()));
+}
+function beginQuiz(label){qi=0;roundRight=0;locked=false;$("quizLabel").textContent=label;$("roundCorrect").textContent="۰";go("quiz");renderQuestion()}
+function renderQuestion(){
+if(qi>=questions.length){finishQuiz();return}
+let q=questions[qi];locked=false;
+$("qCounter").textContent="سؤال "+fa(qi+1)+" از "+fa(questions.length);
+$("quizBar").style.width=(qi/questions.length*100)+"%";
+$("qTitle").textContent=q.q;$("qOptions").innerHTML="";$("feedback").classList.add("hidden");$("nextBtn").disabled=true;
+q.o.forEach((v,i)=>{let b=document.createElement("button");b.className="option";b.textContent=fa(i+1)+" ـ "+v;b.onclick=()=>answer(i,b);$("qOptions").appendChild(b)});
+}
+function answer(i,button){
+if(locked)return;locked=true;let q=questions[qi],buttons=[...$("qOptions").children];state.answered++;
+if(i===q.a){state.right++;state.score+=10;roundRight++;button.classList.add("correct")}
+else{button.classList.add("wrong");buttons[q.a].classList.add("correct")}
+state.done[grade()+"-"+q.lesson]=true;
+$("roundCorrect").textContent=fa(roundRight);
+$("feedback").classList.remove("hidden");
+$("feedback").textContent=(i===q.a?"آفرین! پاسخ درست است ⭐ ":"پاسخ درست: "+q.o[q.a]+" — ")+q.x;
+$("nextBtn").disabled=false;save();updateStats();
+}
+function nextQuestion(){if(!locked)return;qi++;renderQuestion()}
+function finishQuiz(){
+$("qCounter").textContent="پایان آزمون";
+$("quizBar").style.width="100%";$("qTitle").textContent="آفرین! آزمون تمام شد 🎉";
+$("qOptions").innerHTML=`<div class="big">${fa(roundRight)} از ${fa(questions.length)}</div><p>پاسخ صحیح</p>`;
+$("feedback").classList.remove("hidden");
+$("feedback").textContent="برای یادگیری بهتر، پاسخ‌های اشتباه را دوباره تمرین کن.";
+$("nextBtn").disabled=true;$("nextBtn").textContent="بازگشت به خانه";
+$("nextBtn").onclick=()=>{ $("nextBtn").textContent="سؤال بعدی ←";$("nextBtn").onclick=nextQuestion;go("home")};
+$("quizBar").style.width="100%";updateStats();
+}
+function updateStats(){
+$("totalScore").textContent=fa(state.score||0);$("totalTests").textContent=fa(state.answered||0);
+let acc=state.answered?Math.round(state.right/state.answered*100):0;
+$("accuracy").textContent=fa(acc)+"٪";
+let count=Object.keys(state.done||{}).length;
+$("doneLessons").textContent=fa(count);
+$("overallBar").style.width=Math.min(100,acc)+"%";
+$("progressText").textContent=state.answered?"تا اینجا "+fa(acc)+" درصد پاسخ‌هایت درست بوده است.":"با اولین آزمون، گزارش پیشرفتت شروع می‌شود.";
+$("level").textContent=acc>=80?"عالی 🌟":acc>=50?"در حال پیشرفت":"شروع یادگیری";
+$("rScore").textContent=fa(state.score||0);$("rRight").textContent=fa(state.right||0);
+$("reportBar").style.width=acc+"%";
+$("reportText").textContent="درصد موفقیت: "+fa(acc)+"٪ از پاسخ‌ها. برای پیشرفت بیشتر، درس‌های اشتباه را مرور کن.";
+let hist=Object.keys(state.done||{}).filter(k=>k.startsWith(grade()+"-")).map(k=>k.split("-").slice(1).join("-"));
+$("history").textContent=hist.length?hist.join("، "):"هنوز درسی تمرین نشده است.";
+}
+function resetProgress(){
+if(!confirm("کارنامه و امتیازهای ذخیره‌شده پاک شوند؟"))return;
+state.score=0;state.answered=0;state.right=0;state.done={};save();updateStats();renderLessons();
+}
+function toggleDark(){document.body.classList.toggle("dark");state.dark=document.body.classList.contains("dark");save()}
+if(state.dark)document.body.classList.add("dark");
+changeGrade();updateStats();
+</script>
+</body>
+</html>
+
 
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
